@@ -7,7 +7,7 @@ class MaterialService:
     def __init__(self, repository: MaterialRepository):
         self.repository = repository
 
-    def get_all(self, skip: int = 0, limit: int = 10):
+    def get_all(self, skip: int = 0, limit: int = 20):
         return self.repository.get_all(skip=skip, limit=limit)
 
     def get_by_id(self, material_id: UUID):
