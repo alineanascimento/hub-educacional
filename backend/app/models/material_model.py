@@ -9,7 +9,7 @@ class Material(Base):
     __tablename__ = "materials"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = Column(String, nullable=False)
+    title = Column(String, nullable=False)
     description = Column(Text, nullable=True)
     resource_type = Column(String, nullable=False)
     url = Column(String, nullable=False)

@@ -3,13 +3,12 @@ from typing import List, Optional
 from datetime import datetime
 import uuid
 
-from pydantic_core import Url
 
 class MaterialBase(BaseModel):
     title: str
     description: Optional[str] = None
     resource_type: str
-    url: Url
+    url: str
     tags: Optional[List[str]] = None
 
 class MaterialCreate(MaterialBase):
@@ -19,7 +18,7 @@ class MaterialUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     resource_type: Optional[str] = None
-    url: Optional[Url] = None
+    url: Optional[str] = None
     tags: Optional[List[str]] = None
 
 

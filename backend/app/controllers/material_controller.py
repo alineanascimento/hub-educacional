@@ -5,7 +5,7 @@ from uuid import UUID
 from app.services.material_service import MaterialService
 from app.schemas.material_schema import MaterialCreate, MaterialUpdate, MaterialResponse
 from app.repositories.material_repository import MaterialRepository
-from database import get_db
+from app.database.database import get_db
 from sqlalchemy.orm import Session
 
 
