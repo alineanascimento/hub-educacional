@@ -17,8 +17,10 @@ class MaterialService:
         return material
 
     def create(self, material: MaterialCreate):
-        if material.resource_type not in ["Video", "PDF", "Link"]:
+        normalized = material.resource_type.strip().capitalize()
+        if normalized not in ["Video", "Pdf", "Link"]:
             raise HTTPException(status_code=400, detail="Invalid resource_type. Must be Video, PDF or Link")
+        material.resource_type = normalized
         return self.repository.create(material)
 
     def update(self, material_id: UUID, material: MaterialUpdate):

@@ -23,10 +23,11 @@ def get_all(skip: int = 0, limit: int = 20, service: MaterialService = Depends(g
 def get_by_id(material_id: UUID, service: MaterialService = Depends(get_material_service)):
     return service.get_by_id(material_id)
 
+
 @MaterialRouter.post("/", response_model=MaterialResponse, status_code=201)
 def create(material: MaterialCreate, service: MaterialService = Depends(get_material_service)):
+    print("PAYLOAD RECEBIDO:", material.dict())
     return service.create(material)
-
 @MaterialRouter.patch("/{material_id}", response_model=MaterialResponse)
 def update(material_id: UUID, material: MaterialUpdate, service: MaterialService = Depends(get_material_service)):
     return service.update(material_id, material)
