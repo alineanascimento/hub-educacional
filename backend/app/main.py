@@ -6,6 +6,8 @@ from app.controllers.ai_controller import AIRouter
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Hub Educacional")
-
+@app.get("/health", tags=["Health"])
+def health():
+    return {"status": "ok"}
 app.include_router(MaterialRouter)
 app.include_router(AIRouter)

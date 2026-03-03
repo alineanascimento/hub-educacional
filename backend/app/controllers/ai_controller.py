@@ -3,11 +3,16 @@ from pydantic import BaseModel
 import anthropic
 import os
 import json
+import logging
+import time
 from dotenv import load_dotenv
 
 load_dotenv()
 
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+logger = logging.getLogger(__name__)
 
 AIRouter = APIRouter(prefix="/ai", tags=["AI"])
 
@@ -22,6 +27,7 @@ class AIResponse(BaseModel):
 @AIRouter.post("/suggest", response_model=AIResponse)
 def suggest(request: AIRequest):
     try:
+        start = time.time()
         message = client.messages.create(
             model="claude-sonnet-4-5",
             max_tokens=1024,
@@ -35,6 +41,10 @@ Responda APENAS com JSON válido, sem texto adicional, no formato:
                 }
             ]
         )
+        latency = round(time.time() - start, 2)
+        token_usage = message.usage.input_tokens + message.usage.output_tokens
+        logger.info(f'AI Request: Title="{request.title}", TokenUsage={token_usage}, Latency={latency}s')
+
         text = message.content[0].text.strip()
         if text.startswith("```"):
             text = text.split("```")[1]
@@ -43,5 +53,5 @@ Responda APENAS com JSON válido, sem texto adicional, no formato:
         result = json.loads(text.strip())
         return AIResponse(**result)
     except Exception as e:
-        print(f"ERRO: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"AI error: {e}")
+        raise HTTPException(status_code=500, detail="Erro interno no serviço de IA")
