@@ -1,4 +1,3 @@
-from sqlite3 import dbapi2
 from sqlalchemy.orm import Session
 from app.models.material_model import Material
 from app.schemas.material_schema import MaterialCreate, MaterialUpdate

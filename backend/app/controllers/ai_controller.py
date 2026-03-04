@@ -81,8 +81,10 @@ Responda APENAS com JSON válido, sem markdown, sem blocos de código, sem texto
             messages=[
                 {
                     "role": "user",
-                    "content": f"Gere uma descrição educacional e 3 tags para o material: Título: {payload.title}, Tipo: {payload.resource_type}",
-                }
+                    "content": (
+                        f"Gere uma descrição educacional e 3 tags para o material: "
+                        f"Título: {payload.title}, Tipo: {payload.resource_type}"
+                    ),                }
             ],
         )
 
