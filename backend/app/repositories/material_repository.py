@@ -11,17 +11,17 @@ class MaterialRepository:
 
     def get_all(self, skip: int = 0, limit: int = 20):
         return self.db.query(Material).offset(skip).limit(limit).all()
-    
+
     def get_by_id(self, material_id: UUID):
         return self.db.query(Material).filter(Material.id == material_id).first()
-    
+
     def create(self, material: MaterialCreate):
         db_material = Material(**material.model_dump())
         self.db.add(db_material)
         self.db.commit()
         self.db.refresh(db_material)
         return db_material
-    
+
     def update(self, material_id: UUID, material_update: MaterialUpdate):
         db_material = self.get_by_id(material_id)
         if not db_material:
@@ -31,7 +31,7 @@ class MaterialRepository:
         self.db.commit()
         self.db.refresh(db_material)
         return db_material
-    
+
     def delete(self, material_id: UUID):
         db_material = self.get_by_id(material_id)
         if not db_material:

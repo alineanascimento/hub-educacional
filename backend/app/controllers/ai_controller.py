@@ -13,8 +13,7 @@ load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -68,7 +67,7 @@ def suggest(payload: AIRequest, request: Request):
 
     try:
         start_time = time.time()
-        
+
         logger.info(
             f"AI Request Started | Title: '{payload.title}' | Type: '{payload.resource_type}'"
         )
@@ -88,9 +87,7 @@ Responda APENAS com JSON válido, sem markdown, sem blocos de código, sem texto
         )
 
         latency = round(time.time() - start_time, 2)
-        token_usage = (
-            message.usage.input_tokens + message.usage.output_tokens
-        )
+        token_usage = message.usage.input_tokens + message.usage.output_tokens
 
         logger.info(
             f"AI Success | Title: '{payload.title}' | TokenUsage: {token_usage} | Latency: {latency}s"
@@ -98,21 +95,27 @@ Responda APENAS com JSON válido, sem markdown, sem blocos de código, sem texto
 
         text = message.content[0].text.strip()
         logger.debug(f"Raw AI Response: {text[:200]}")
-        
+
         if text.startswith("```json"):
             text = text.split("```json")[1].split("```")[0].strip()
         elif text.startswith("```"):
             text = text.split("```")[1].split("```")[0].strip()
 
         result = json.loads(text)
-        
-        if not isinstance(result, dict) or "description" not in result or "tags" not in result:
+
+        if (
+            not isinstance(result, dict)
+            or "description" not in result
+            or "tags" not in result
+        ):
             raise ValueError("Invalid response structure from AI")
 
         return AIResponse(**result)
 
     except json.JSONDecodeError as e:
-        logger.error(f"JSON Parse Error | Title: '{payload.title}' | Error: {str(e)} | Text: {text[:100]}")
+        logger.error(
+            f"JSON Parse Error | Title: '{payload.title}' | Error: {str(e)} | Text: {text[:100]}"
+        )
         raise HTTPException(
             status_code=502,
             detail="A IA retornou um formato inválido. Tente novamente.",
@@ -127,7 +130,9 @@ Responda APENAS com JSON válido, sem markdown, sem blocos de código, sem texto
         if "api" in error_msg or "key" in error_msg or "auth" in error_msg:
             detail = "Erro de autenticação com a IA. Verifique a chave da API."
         elif "rate limit" in error_msg or "quota" in error_msg:
-            detail = "Limite de requisições atingido. Aguarde um momento e tente novamente."
+            detail = (
+                "Limite de requisições atingido. Aguarde um momento e tente novamente."
+            )
         else:
             detail = "Erro ao conectar com o serviço de IA. Tente novamente mais tarde."
         raise HTTPException(status_code=500, detail=detail)

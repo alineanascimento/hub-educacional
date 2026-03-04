@@ -11,8 +11,10 @@ class MaterialBase(BaseModel):
     url: str
     tags: Optional[List[str]] = None
 
+
 class MaterialCreate(MaterialBase):
     pass
+
 
 class MaterialUpdate(BaseModel):
     title: Optional[str] = None

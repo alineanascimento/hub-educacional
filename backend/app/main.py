@@ -7,9 +7,13 @@ from fastapi.middleware.cors import CORSMiddleware
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Hub Educacional")
+
+
 @app.get("/health", tags=["Health"])
 def health():
     return {"status": "ok"}
+
+
 app.include_router(MaterialRouter)
 app.include_router(AIRouter)
 app.add_middleware(

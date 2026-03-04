@@ -3,6 +3,7 @@ from app.schemas.material_schema import MaterialCreate, MaterialUpdate
 from uuid import UUID
 from fastapi import HTTPException
 
+
 class MaterialService:
     def __init__(self, repository: MaterialRepository):
         self.repository = repository
@@ -19,7 +20,10 @@ class MaterialService:
     def create(self, material: MaterialCreate):
         normalized = material.resource_type.strip().capitalize()
         if normalized not in ["Video", "Pdf", "Link"]:
-            raise HTTPException(status_code=400, detail="Invalid resource_type. Must be Video, PDF or Link")
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid resource_type. Must be Video, PDF or Link",
+            )
         material.resource_type = normalized
         return self.repository.create(material)
 
